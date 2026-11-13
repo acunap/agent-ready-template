@@ -11,15 +11,3 @@ A starting point for projects built with coding agents, where the architecture i
 | `docs/adr/`            | Architecture decision records: the reasons behind each hard-to-reverse decision                |
 | `docs/examples/api/`   | A worked backend example: three modules, twelve use cases, cross-module calls and events      |
 | `docs/agents/`         | Configuration for the engineering skills: issue tracker, triage labels, domain docs            |
-
-## Using it
-
-1. Create a repository from this template.
-2. Choose the stack of each app and record it in an ADR, as `docs/architecture.md` asks.
-3. Add the project's first modules to the module table in `docs/architecture.md`.
-
-Run the example's tests (Node 23.6+):
-
-```bash
-node --test 'docs/examples/**/*.test.ts'
-```
