@@ -10,6 +10,13 @@ Before creating, moving or renaming any file, folder, module or dependency, read
 - **Amend unpublished work only.** While a branch is local, amend freely. Once it is pushed or a PR is open, feedback arrives as new commits; rewriting shared history is the human's call (`git push --force-with-lease`), never the agent's.
 - **A commit for something else is a different commit.** Work that belongs to another ticket, or that the human asked for explicitly as a follow-up, gets its own commit and its own ticket reference.
 
+## Closing a ticket
+
+The order is fixed: implement, review, demo, close.
+
+- **Demo before closing.** Run the work locally and hand the human a review guide: what to open, what to look at there, the commands to verify it themselves, and the decisions only they can make. Six lines at most.
+- **Never close on your own.** Ask; closing is the human's call. Close with a comment that keeps the guide, so the ticket says how it was checked.
+
 ## Agent skills
 
 ### Issue tracker
