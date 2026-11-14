@@ -22,13 +22,19 @@ docs/
   examples/       reference examples, not production code
 ```
 
+The repository root holds only what has to be shared by both apps: the manifest and lockfile that tie them together, the tooling configuration both apps inherit, the single boundary configuration for the whole repository, and CI. No app-specific code, config or dependency lives at the root.
+
 ## Language and naming
 
-- Everything in the repository is written in English: code, file names, docs, ADRs, commit messages.
+- Everything in the repository is written in English: code, file names, docs, ADRs, commit messages, and product UI copy.
 - This document is language-agnostic. The stack of each app is recorded in an ADR before its first line of code.
 - Identifiers, files and folders follow the naming convention of the app's language.
 - Slice files, the module file and tests carry their **role** in their name: `request`, `handler`, `endpoint`, `subscriber`, `module`, `test`. The exact form follows the language (for TypeScript: `cancel-order.handler.ts`).
 - Code has no comments. Names carry the intent; the reasons go in `docs/`.
+
+## Just-in-time
+
+Build each piece only in the slice that consumes it. A contract path, endpoint, schema, seed, UI screen, or test is added at the moment it is needed, never ahead of the slice that uses it. Speculative "for later" work is a defect, and an API change is added to `contracts/` only when the endpoint that serves it is being built.
 
 ## Contracts
 
@@ -147,6 +153,8 @@ apps/web/src/
 - Each slice exposes a public API, and other code imports only through it.
 - Segments inside a slice: `ui`, `model`, `api`, `lib`, `config`.
 - Only `entities/<entity>/api` uses the generated client in `shared/api`. Features and everything above reach the backend through an entity.
+- The app's entry point belongs to no segment, so it sits at the root of the `app` slice. Whatever the app's build needs in order to boot it is app setup as well, and lives with it.
+- End-to-end tests live beside the app rather than next to the code they exercise: they have no single subject, so "tests sit next to the code they test" does not apply to them.
 
 ## Testing
 
@@ -162,6 +170,10 @@ apps/web/src/
 
 The first scaffold of each app includes a boundary check in CI that encodes the dependency rules above. The tool is chosen with the app's stack.
 
+A boundary rule is verified by watching it fail, not by reading it: it is added together with a throwaway file that violates it, and that file is deleted only once the check has been seen rejecting it.
+
+The repository's CI runs, on every change, type checking, linting, the boundary check, the tests, a build, and an end-to-end smoke test. It also regenerates everything generated from `contracts/` and fails when the result differs from what is committed, so a contract change cannot leave its client behind.
+
 ## Open decisions
 
 These are not decided. Ask the human before any work that depends on them.
@@ -172,6 +184,8 @@ These are not decided. Ask the human before any work that depends on them.
 - Event bus, outbox and inbox implementation.
 - Authentication and authorisation.
 - Deployment.
+
+The shape those answers take is in [`0007-stack-and-tooling.md`](adr/0007-stack-and-tooling.md).
 
 ## Reference example
 
